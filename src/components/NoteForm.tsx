@@ -1,13 +1,29 @@
-import { useRef } from "react";
+import { FormEvent, useRef, useState } from "react";
 import { Button, Col, Form, Row, Stack } from "react-bootstrap";
 import { Link } from "react-router-dom";
-import CreatableReactSelect from 'react-select'
+import CreatableReactSelect from 'react-select/creatable'
+import { NoteData, Tag } from "../App";
 
-export function NoteForm() {
+export interface INoteFormProps {
+    onSubmit: (data: NoteData) => void
+}
+
+export function NoteForm({ onSubmit }: INoteFormProps) {
     const inputRef = useRef<HTMLInputElement>(null)
     const textareaRef = useRef<HTMLTextAreaElement>(null)
+    const [selectedTags, setSelectedTags] = useState<Tag[]>([])
+    
+    const handleSubmit = (e: FormEvent) => {
+        e.preventDefault()
+        onSubmit({
+            title: inputRef.current!.value,
+            markdown: textareaRef.current!.value,
+            tags: selectedTags,
+        })
+    }
+
     return (
-        <Form>
+        <Form onSubmit={handleSubmit}>
             <Stack gap={4}>
                 <Row>
                     <Col>
@@ -19,7 +35,18 @@ export function NoteForm() {
                     <Col>
                         <Form.Group controlId="tags">
                             <Form.Label>Tags</Form.Label>
-                            <CreatableReactSelect isMulti />
+                            <CreatableReactSelect 
+                                value={selectedTags.map(({id: value, label} : Tag) => {
+                                    return { value, label }
+                                })}
+                                onChange={(tags) => {
+                                    setSelectedTags(tags.map(({value: id, label}) => ({
+                                        id,
+                                        label
+                                    })))
+                                }}
+                                isMulti
+                            />
                         </Form.Group>
                     </Col>
                 </Row>
