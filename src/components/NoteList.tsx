@@ -42,7 +42,7 @@ export const NoteList = ({ availableTags, notes }: INoteListProps) => {
                 </Col>
             </Row>
             <Form>
-                <Row>
+                <Row className="mb-4">
                     <Col>
                         <Form.Group controlId="title">
                             <Form.Label>Title</Form.Label>
