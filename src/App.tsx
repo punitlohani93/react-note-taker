@@ -4,6 +4,7 @@ import { Container } from "react-bootstrap"
 import { Navigate, Route, Routes } from "react-router-dom"
 import { v4 as uuidV4 } from 'uuid'
 import { NewNote } from "./components/NewNote"
+import { NoteList } from "./components/NoteList"
 import { useLocalStorage } from "./hooks/useLocalStorage"
 
 export type Note = {
@@ -57,7 +58,7 @@ function App() {
   return (
     <Container className="my-4">
       <Routes>
-        <Route path="/" element={<h1>Home</h1>}/>
+        <Route path="/" element={<NoteList />}/>
         <Route path="/new" element={<NewNote onSubmit={createNote} onAddTag={onAddTag} availableTags={tags} />} />
         <Route path="/:id">
           <Route index element={<h1>Show</h1>} />
