@@ -3,6 +3,7 @@ import { useMemo, useState } from 'react'
 import { Container } from "react-bootstrap"
 import { Navigate, Route, Routes } from "react-router-dom"
 import { v4 as uuidV4 } from 'uuid'
+import { EditNote } from "./components/EditNote"
 import { NewNote } from "./components/NewNote"
 import { Note } from "./components/Note"
 import { NoteLayout } from "./components/NoteLayout"
@@ -53,6 +54,18 @@ function App() {
     })
   }
 
+  const updateNote = (id: string, { tags, ...data }: NoteData) => {
+    setNotes(prevNotes => {
+      return prevNotes.map(note => {
+        if (note.id === id) {
+          return { ...note, ...data, tagIds: tags.map(tag => tag.id) }
+        } else {
+          return note
+        }
+      })
+    })
+  }
+
   const onAddTag = (tag: Tag) => {
     setTags(prev => [...prev, tag])
   }
@@ -64,7 +77,7 @@ function App() {
         <Route path="/new" element={<NewNote onSubmit={createNote} onAddTag={onAddTag} availableTags={tags} />} />
         <Route path="/:id" element={<NoteLayout notes={notesWithTags} />}>
           <Route index element={<Note />} />
-          <Route path="edit" element={<h1>Edit</h1>} />
+          <Route path="edit" element={<EditNote onSubmit={updateNote} onAddTag={onAddTag} availableTags={tags} />} />
         </Route>
         <Route path="*" element={<Navigate to="/" />} />
       </Routes>
