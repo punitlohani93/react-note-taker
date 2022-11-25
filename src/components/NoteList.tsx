@@ -1,4 +1,4 @@
-import { EventHandler, SetStateAction, useMemo, useState } from "react"
+import { ChangeEvent, EventHandler, SetStateAction, useMemo, useState } from "react"
 import { Button, Col, Form, Row, Stack } from "react-bootstrap"
 import { Link } from "react-router-dom"
 import ReactSelect from 'react-select'
@@ -14,7 +14,7 @@ export const NoteList = ({ availableTags, notes }: INoteListProps) => {
     const [title, setTitle] = useState<string>('')
     const [selectedTags, setSelectedTags] = useState<Tag[]>([])
 
-    const onChange = (e) => {
+    const onChange = (e: ChangeEvent<HTMLInputElement>) => {
         setTitle(e.target.value)
     }
 
