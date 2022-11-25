@@ -3,16 +3,20 @@ import { Button, Col, Form, Row, Stack } from "react-bootstrap"
 import { Link } from "react-router-dom"
 import ReactSelect from 'react-select'
 import { Note, Tag } from "../App"
+import { EditTagsModal, IEditTagsModalProps } from "./EditTagsModal"
 import { NoteCard } from "./NoteCard"
 import { INoteFormProps } from "./NoteForm"
 
 interface INoteListProps extends Pick<INoteFormProps, 'availableTags'> {
     notes: Note[]
+    onUpdateTag: IEditTagsModalProps['onUpdate']
+    onDeleteTag: IEditTagsModalProps['onDelete']
 }
 
-export const NoteList = ({ availableTags, notes }: INoteListProps) => {
+export const NoteList = ({ availableTags, notes, onDeleteTag, onUpdateTag }: INoteListProps) => {
     const [title, setTitle] = useState<string>('')
     const [selectedTags, setSelectedTags] = useState<Tag[]>([])
+    const [editTagsModalShow, setEditTagsModalShow] = useState(false)
 
     const onChange = (e: ChangeEvent<HTMLInputElement>) => {
         setTitle(e.target.value)
@@ -37,7 +41,14 @@ export const NoteList = ({ availableTags, notes }: INoteListProps) => {
                         <Link to="/new" >
                             <Button>Create</Button>
                         </Link>
-                        <Button variant="outline-secondary">Edit tags</Button>
+                        <Button
+                            onClick={() => {
+                                setEditTagsModalShow(true)
+                            }}
+                            variant="outline-secondary"
+                        >
+                            Edit tags
+                        </Button>
                     </Stack>
                 </Col>
             </Row>
@@ -78,6 +89,13 @@ export const NoteList = ({ availableTags, notes }: INoteListProps) => {
                     </Col>
                 ))}
             </Row>
+            <EditTagsModal
+                show={editTagsModalShow}
+                availableTags={availableTags}
+                onClose={() => { setEditTagsModalShow(false) }}
+                onDelete={onDeleteTag}
+                onUpdate={onUpdateTag}
+            />
         </>
     )
 }
